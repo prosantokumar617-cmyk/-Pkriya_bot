@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pkriya Ad Watcher</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- আপনার সরবরাহ করা বিজ্ঞাপন নেটওয়ার্কের স্ক্রিপ্ট -->
+    <script src='//libtl.com/sdk.js' data-zone='11526714' data-sdk='show_11526714'></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a2a;
+        }
+        h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #0088cc;
+        }
+        .ad-area {
+            min-height: 120px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .timer-box {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+        .btn {
+            background-color: #0088cc;
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .btn:disabled {
+            background-color: #444444;
+            color: #888888;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📢 Pkriya Ad Network</h2>
+    
+    <!-- বিজ্ঞাপন প্রদর্শনের জায়গা -->
+    <div class="ad-area">
+        <div id="ad-container">
+            <p>বিজ্ঞাপন লোড হচ্ছে...</p>
+        </div>
+    </div>
+    
+    <div class="timer-box" id="timer-box">
+        নতুন অ্যাডের জন্য অপেক্ষা করুন: <b id="timer">15</b> সেকেন্ড
+    </div>
+
+    <button id="next-btn" class="btn" disabled onclick="loadNextAd()">❌ Cross / Next Ad</button>
+</div>
+
+<script>
+    let timeLeft = 15;
+    let timerInterval;
+
+    function triggerAd() {
+        // আপনার থার্ড-পার্টি অ্যাড কল করার ফংশন
+        if (typeof show_11526714 === 'function') {
+            try {
+                show_11526714();
+            } catch (e) {
+                console.log("Ad script error:", e);
+            }
+        }
+    }
+
+    function startTimer() {
+        timeLeft = 15;
+        document.getElementById("timer").innerText = timeLeft;
+        document.getElementById("next-btn").disabled = true;
+        document.getElementById("timer-box").style.visibility = "visible";
+
+        triggerAd(); // অ্যাড সক্রিয় করা
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById("timer").innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById("next-btn").disabled = false;
+                document.getElementById("timer-box").style.visibility = "hidden";
+            }
+        }, 1000);
+    }
+
+    function loadNextAd() {
+        // নতুন অ্যাড দেখাবে এবং পুনরায় ১৫ সেকেন্ডের টাইমার শুরু হবে
+        startTimer();
+    }
+
+    // প্রথমবার পেজ লোড হলে টাইমার শুরু হবে
+    startTimer();
+</script>
+
+</body>
+</html>
