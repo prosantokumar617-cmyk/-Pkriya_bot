@@ -1,0 +1,32 @@
+import logging
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+
+#  Telegram Bot Token
+BOT_TOKEN = "8693236578:AAH94eDLMmduNipo6PAkD_mSeMS3YHcL6Zo"
+
+#  GitHub Pages    
+WEB_APP_URL = "https://prosantokumar617-cmyk.github.io/-Pkriya_bot/"
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    #        
+    keyboard = [
+        [InlineKeyboardButton(" Watch Ad (15s)", web_app=WebAppInfo(url=WEB_APP_URL))]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    await update.message.reply_text(
+        "! @Pkriya_bot -\n\n 'Watch Ad'       :",
+        reply_markup=reply_markup
+    )
+
+if __name__ == '__main__':
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    print("Pkriya Bot is running successfully...")
+    app.run_polling()
